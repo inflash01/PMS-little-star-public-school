@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMS Little Star Public School - Excellence in Education</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #1E88E5;
+            --primary-orange: #FF9800;
+            --secondary-blue: #0D47A1;
+            --white: #ffffff;
+            --dark-text: #0D47A1;
+            --light-text: #546E7A;
+            --primary-yellow: #FFC107;
+            --primary-red: #E91E63;
+            --gradient-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-green: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --gradient-pink: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Nunito', sans-serif; overflow-x: hidden; background: var(--white); }
+
+        /* Advanced Loader */
+        .loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            display: flex; justify-content: center; align-items: center; z-index: 10000;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .loader.hidden { opacity: 0; visibility: hidden; transform: scale(1.5); }
+        .loader-content { text-align: center; }
+        .loader-logo {
+            width: 120px; height: 120px; 
+            background: var(--gradient-purple);
+            border-radius: 30px;
+            display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;
+            animation: loaderBounce 1s ease-in-out infinite, loaderRotate 2s linear infinite;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.5);
+            transform-style: preserve-3d;
+        }
+        .loader-logo i { font-size: 60px; color: var(--white); animation: starPulse 1s ease-in-out infinite; }
+        .loader-text { 
+            color: var(--white); font-family: 'Fredoka One', cursive; font-size: 28px;
+            text-shadow: 0 0 30px rgba(255,255,255,0.5);
+            animation: textGlow 2s ease-in-out infinite;
+        }
+        .loader-spinner {
+            width: 50px; height: 50px; margin: 20px auto 0;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: var(--primary-yellow);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes loaderBounce { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-15px) scale(1.05); } }
+        @keyframes loaderRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes starPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        @keyframes textGlow { 0%, 100% { text-shadow: 0 0 30px rgba(255,255,255,0.5); } 50% { text-shadow: 0 0 50px rgba(255,255,255,0.8), 0 0 80px rgba(255,152,0,0.5); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Animated Background */
+        .animated-bg { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .floating-shapes {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden;
+        }
+        .shape {
+            position: absolute; opacity: 0.1; animation: floatShape 20s ease-in-out infinite;
+        }
+        .shape:nth-child(1) { top: 10%; left: 10%; width: 100px; height: 100px; background: var(--primary-orange); border-radius: 50%; animation-delay: 0s; }
+        .shape:nth-child(2) { top: 60%; right: 10%; width: 150px; height: 150px; background: var(--primary-blue); border-radius: 30%; animation-delay: -5s; }
+        .shape:nth-child(3) { bottom: 20%; left: 20%; width: 80px; height: 80px; background: var(--primary-red); border-radius: 50%; animation-delay: -10s; }
+        .shape:nth-child(4) { top: 30%; right: 30%; width: 60px; height: 60px; background: var(--primary-yellow); border-radius: 30%; animation-delay: -15s; }
+        @keyframes floatShape {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(50px, -50px) rotate(90deg); }
+            50% { transform: translate(0, -100px) rotate(180deg); }
+            75% { transform: translate(-50px, -50px) rotate(270deg); }
+        }
+        .floating-stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .star { position: absolute; color: var(--primary-orange); animation: float 6s ease-in-out infinite; opacity: 0.6; text-shadow: 0 0 10px var(--primary-orange); }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg) scale(1); } 50% { transform: translateY(-20px) rotate(10deg) scale(1.2); } }
+
+        /* Header */
+        header { 
+            background: linear-gradient(135deg, var(--secondary-blue) 0%, #1565C0 50%, #1976D2 100%); 
+            padding: 15px 0; position: sticky; top: 0; z-index: 1000; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2); animation: slideDown 0.6s ease;
+            backdrop-filter: blur(10px);
+        }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+        .header-container { max-width: 1400px; margin: 0 auto; padding: 0 30px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .logo { display: flex; align-items: center; gap: 20px; animation: logoSlide 0.8s ease; }
+        @keyframes logoSlide { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .logo-img { 
+            width: 80px; height: 80px; background: var(--gradient-purple); border-radius: 25px; 
+            display: flex; align-items: center; justify-content: center; 
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+            animation: logoPulse 2s ease-in-out infinite, logoFloat 4s ease-in-out infinite;
+            overflow: hidden; transition: all 0.4s ease;
+        }
+        .logo-img:hover { transform: scale(1.1) rotate(5deg); box-shadow: 0 15px 40px rgba(102, 126, 234, 0.7); }
+        @keyframes logoPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes logoFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        .logo-img img { width: 100%; height: 100%; object-fit: cover; }
+        .logo-img i { font-size: 40px; color: var(--white); text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        
+        .logo-text h1 { 
+            font-family: 'Fredoka One', cursive; color: var(--white); font-size: 32px; 
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3); letter-spacing: 1px;
+            background: linear-gradient(90deg, #fff, #ffd700, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        @keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .logo-text p { color: #BBDEFB; font-size: 15px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+        
+        nav { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        nav a { 
+            color: var(--white); text-decoration: none; padding: 12px 20px; border-radius: 30px; 
+            font-weight: 700; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); font-size: 14px; 
+            position: relative; overflow: hidden; text-transform: uppercase; letter-spacing: 1px;
+        }
+        nav a::before { 
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; 
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); 
+            transition: left 0.5s ease;
+        }
+        nav a:hover::before { left: 100%; }
+        nav a:hover { 
+            background: var(--gradient-purple); transform: translateY(-3px) scale(1.05); 
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+        nav a.active { background: var(--gradient-purple); }
+        
+        .menu-toggle { 
+            display: none; background: var(--primary-yellow); border: none; padding: 15px 20px; 
+            border-radius: 15px; cursor: pointer; font-size: 24px; color: var(--secondary-blue); 
+            transition: all 0.3s ease; animation: menuPulse 2s ease-in-out infinite;
+        }
+        .menu-toggle:hover { transform: scale(1.1) rotate(90deg); }
+        @keyframes menuPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.5); } 50% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); } }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            padding: 50px 20px; text-align: center; position: relative; overflow: hidden;
+            animation: bannerSlide 1s ease-out;
+        }
+        @keyframes bannerSlide { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+        .hero-banner::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotateBg 20s linear infinite;
+        }
+        @keyframes rotateBg { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        .hero-content { position: relative; z-index: 1; }
+        .hero-banner h2 { 
+            font-family: 'Fredoka One', cursive; color: var(--white); font-size: 48px; 
+            margin-bottom: 15px; text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            animation: heroText 1s ease-out;
+        }
+        @keyframes heroText { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .hero-banner p { color: var(--white); font-size: 22px; font-weight: 700; margin-bottom: 20px; }
+        
+        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .cta-btn { 
+            display: inline-block; padding: 18px 45px; background: var(--white); color: #667eea; 
+            text-decoration: none; border-radius: 50px; font-weight: 900; font-size: 18px; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-transform: uppercase; letter-spacing: 2px;
+        }
+        .cta-btn:hover { 
+            transform: translateY(-5px) scale(1.05) rotate(2deg); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .cta-btn-secondary {
+            background: transparent; border: 3px solid var(--white); color: var(--white);
+        }
+        .cta-btn-secondary:hover { background: var(--white); color: #667eea; }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: linear-gradient(135deg, var(--secondary-blue) 0%, #1976D2 100%);
+            padding: 40px 20px; display: flex; justify-content: center; gap: 60px; flex-wrap: wrap;
+        }
+        .stat-item { text-align: center; color: var(--white); }
+        .stat-item .number { 
+            font-family: 'Fredoka One', cursive; font-size: 48px; 
+            background: linear-gradient(90deg, #ffd700, #ffed4a, #ffd700);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: countUp 2s ease-out;
+        }
+        .stat-item .label { font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Sections */
+        section { padding: 100px 30px; max-width: 1400px; margin: 0 auto; }
+        .section-title { text-align: center; margin-bottom: 60px; }
+        .section-title h2 { 
+            font-family: 'Fredoka One', cursive; font-size: 52px; color: var(--secondary-blue); 
+            margin-bottom: 20px; position: relative; display: inline-block;
+            animation: titleIn 0.8s ease-out;
+        }
+        @keyframes titleIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .section-title h2::after { 
+            content: '✨'; position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); 
+            font-size: 30px; animation: starBounce 1s ease-in-out infinite;
+        }
+        @keyframes starBounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-10px); } }
+        .section-title p { color: var(--light-text); font-size: 20px; max-width: 700px; margin: 40px auto 0; line-height: 1.8; }
+
+        /* Home Section */
+        #home { text-align: center; padding: 80px 30px; }
+        .home-content { 
+            background: var(--white); border-radius: 40px; padding: 60px; 
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15); position: relative; overflow: hidden;
+        }
+        .home-content::before {
+            content: ''; position: absolute; top: -30%; left: -30%; width: 160%; height: 160%;
+            background: radial-gradient(circle, rgba(102,126,234,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        .home-content h1 { 
+            font-family: 'Fredoka One', cursive; font-size: 56px; color: var(--secondary-blue); 
+            margin-bottom: 25px; position: relative; z-index: 1;
+        }
+        .home-content p { 
+            font-size: 22px; color: var(--light-text); line-height: 1.9; 
+            position: relative; z-index: 1; max-width: 900px; margin: 0 auto;
+        }
+        
+        .features-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 35px; margin-top: 50px; position: relative; z-index: 1;
+        }
+        .feature-card { 
+            background: linear-gradient(135deg, #fff9c4 0%, #ffecb3 100%); padding: 40px; 
+            border-radius: 30px; text-align: center; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 4px solid transparent; position: relative; overflow: hidden;
+        }
+        .feature-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+            opacity: 0; transition: opacity 0.3s ease;
+        }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-card:hover { 
+            transform: translateY(-20px) scale(1.03); 
+            border-color: var(--primary-yellow);
+            box-shadow: 0 30px 60px rgba(255, 193, 7, 0.4);
+        }
+        .feature-card:nth-child(2) { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); }
+        .feature-card:nth-child(2):hover { border-color: var(--primary-blue); box-shadow: 0 30px 60px rgba(33, 150, 243, 0.4); }
+        .feature-card:nth-child(3) { background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); }
+        .feature-card:nth-child(3):hover { border-color: var(--primary-red); box-shadow: 0 30px 60px rgba(233, 30, 99, 0.4); }
+        
+        .feature-card i { 
+            font-size: 70px; margin-bottom: 20px; transition: all 0.4s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .feature-card:hover i { transform: scale(1.3) rotate(10deg); }
+        .feature-card h3 { font-size: 26px; color: var(--dark-text); margin-bottom: 15px; font-family: 'Fredoka One', cursive; }
+        .feature-card p { color: var(--light-text); font-size: 16px; line-height: 1.7; }
+
+        /* About Section */
+        #about { 
+            background: var(--white); border-radius: 50px; margin: 50px auto; 
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+        }
+        .about-content { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; padding: 40px; }
+        .about-text h3 { 
+            font-family: 'Fredoka One', cursive; font-size: 38px; color: var(--secondary-blue); 
+            margin-bottom: 25px; 
+        }
+        .about-text p { color: var(--light-text); line-height: 2; margin-bottom: 25px; font-size: 17px; }
+        
+        .about-highlights { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 30px; }
+        .highlight-tag { 
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%); 
+            color: var(--white); padding: 15px 25px; border-radius: 30px; font-size: 15px; 
+            font-weight: 700; display: flex; align-items: center; gap: 10px; 
+            transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .highlight-tag:hover { transform: scale(1.1) rotate(5deg); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .highlight-tag:nth-child(2) { background: linear-gradient(135deg, var(--primary-yellow) 0%, #FFB300 100%); color: var(--dark-text); }
+        .highlight-tag:nth-child(3) { background: linear-gradient(135deg, var(--primary-red) 0%, #C2185B 100%); }
+        .highlight-tag i { font-size: 18px; }
+        
+        .about-image { display: flex; justify-content: center; align-items: center; }
+        .about-image .school-icon { 
+            width: 350px; height: 350px; 
+            background: linear-gradient(135deg, var(--primary-yellow) 0%, var(--primary-red) 50%, #667eea 100%);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            box-shadow: 0 30px 80px rgba(0,0,0,0.3); position: relative;
+            animation: iconFloat 4s ease-in-out infinite;
+        }
+        @keyframes iconFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .about-image .school-icon::before, .about-image .school-icon::after { 
+            content: '🌟'; position: absolute; font-size: 50px; animation: starBounce 1s ease-in-out infinite;
+        }
+        .about-image .school-icon::before { top: -25px; left: 30px; }
+        .about-image .school-icon::after { bottom: -25px; right: 30px; animation-delay: 0.5s; }
+        .about-image .school-icon i { font-size: 150px; color: var(--white); text-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+        
+        .school-photo-container { 
+            width: 100%; max-width: 500px; border-radius: 35px; overflow: hidden; 
+            box-shadow: 0 30px 80px rgba(0,0,0,0.25); position: relative; border: 6px solid var(--primary-yellow);
+        }
+        .school-photo { width: 100%; height: auto; display: block; transition: transform 0.6s ease; }
+        .school-photo-container:hover .school-photo { transform: scale(1.15); }
+        .school-photo-container::before, .school-photo-container::after { 
+            content: '⭐'; position: absolute; font-size: 45px; animation: starBounce 1s ease-in-out infinite; z-index: 1;
+        }
+        .school-photo-container::before { top: -20px; left: -20px; }
+        .school-photo-container::after { bottom: -20px; right: -20px; animation-delay: 0.5s; }
+
+        /* Classes Section */
+        #classes { 
+            background: linear-gradient(135deg, #e3f2fd 0%, #fff8e1 50%, #fce4ec 100%); 
+            border-radius: 50px; margin: 50px auto;
+        }
+        .classes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
+        
+        .class-card { 
+            background: var(--white); border-radius: 35px; overflow: hidden; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15); 
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .class-card:hover { 
+            transform: translateY(-25px) scale(1.02); 
+            box-shadow: 0 40px 80px rgba(0,0,0,0.25);
+        }
+        
+        .class-card-header { padding: 40px; text-align: center; color: var(--white); position: relative; overflow: hidden; }
+        .class-card:nth-child(1) .class-card-header { background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); }
+        .class-card:nth-child(2) .class-card-header { background: linear-gradient(135deg, #9C27B0 0%, #6A1B9A 100%); }
+        .class-card:nth-child(3) .class-card-header { background: linear-gradient(135deg, var(--primary-blue) 0%, #1565C0 100%); }
+        .class-card:nth-child(4) .class-card-header { background: linear-gradient(135deg, #FF9800 0%, #E65100 100%); }
+        .class-card:nth-child(5) .class-card-header { background: linear-gradient(135deg, var(--primary-red) 0%, #AD1457 100%); }
+        .class-card:nth-child(6) .class-card-header { background: linear-gradient(135deg, #00BCD4 0%, #006064 100%); }
+        
+        .class-card-header::after { 
+            content: '🌟'; position: absolute; right: 25px; top: 50%; transform: translateY(-50%); 
+            font-size: 40px; opacity: 0.5; animation: starBounce 1.5s ease-in-out infinite;
+        }
+        .class-card-header i { font-size: 65px; margin-bottom: 15px; transition: transform 0.4s ease; }
+        .class-card:hover .class-card-header i { transform: scale(1.3) rotate(10deg); }
+        .class-card-header h3 { font-family: 'Fredoka One', cursive; font-size: 28px; }
+        
+        .class-card-body { padding: 35px; }
+        .class-card-body .fee { text-align: center; margin-bottom: 25px; }
+        .class-card-body .fee span { font-size: 48px; font-weight: 900; color: var(--secondary-blue); }
+        .class-card-body .fee small { color: var(--light-text); font-size: 16px; }
+        
+        .class-features { list-style: none; }
+        .class-features li { 
+            padding: 15px 0; border-bottom: 2px dashed #eee; display: flex; align-items: center; gap: 15px; 
+            color: var(--light-text); font-size: 16px; transition: all 0.3s ease;
+        }
+        .class-features li:hover { padding-left: 15px; background: linear-gradient(90deg, rgba(255,193,7,0.1), transparent); border-radius: 10px; }
+        .class-features li:last-child { border-bottom: none; }
+        .class-features li i { color: #4CAF50; font-size: 20px; }
+
+        /* Fee Table */
+        .fee-table { 
+            margin-top: 50px; background: var(--white); border-radius: 30px; padding: 40px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+        .fee-table h3 { 
+            font-family: 'Fredoka One', cursive; font-size: 32px; color: var(--secondary-blue); 
+            text-align: center; margin-bottom: 30px;
+        }
+        .fee-table table { width: 100%; border-collapse: collapse; }
+        .fee-table th, .fee-table td { padding: 20px; text-align: center; border-radius: 15px; transition: all 0.3s ease; }
+        .fee-table th { 
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%); 
+            color: var(--white); font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .fee-table tr:hover td { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); transform: scale(1.02); }
+        .fee-table td { color: var(--dark-text); font-weight: 700; font-size: 17px; }
+        .fee-table td:last-child { color: var(--secondary-blue); font-size: 20px; }
+
+        /* Uniform Section */
+        .uniform-section { margin-top: 50px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .uniform-card { 
+            background: var(--white); border-radius: 30px; padding: 40px; text-align: center; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15); transition: all 0.4s ease;
+        }
+        .uniform-card:hover { transform: translateY(-15px); box-shadow: 0 30px 60px rgba(0,0,0,0.25); }
+        .uniform-card h4 { 
+            font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--secondary-blue); 
+            margin-bottom: 25px;
+        }
+        .uniform-card .uniform-icon { 
+            width: 120px; height: 120px; margin: 0 auto 25px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            transition: all 0.4s ease;
+        }
+        .uniform-card:hover .uniform-icon { transform: scale(1.15) rotate(360deg); }
+        .uniform-card:first-child .uniform-icon { background: linear-gradient(135deg, var(--primary-red) 0%, #AD1457 100%); }
+        .uniform-card:last-child .uniform-icon { background: linear-gradient(135deg, #FF9800 0%, #E65100 100%); }
+        .uniform-card .uniform-icon i { font-size: 55px; color: var(--white); }
+        .uniform-card p { color: var(--light-text); line-height: 1.8; font-size: 17px; }
+
+        /* Admission Form */
+        #admission { 
+            background: var(--white); border-radius: 50px; margin: 50px auto; 
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+        }
+        .admission-form { max-width: 800px; margin: 0 auto; padding: 50px; }
+        .form-group { margin-bottom: 30px; position: relative; }
+        .form-group label { 
+            display: block; margin-bottom: 12px; color: var(--dark-text); 
+            font-weight: 800; font-size: 17px; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .form-group label i { color: var(--primary-yellow); margin-right: 10px; }
+        
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; padding: 18px 25px; border: 3px solid #eee; border-radius: 20px; 
+            font-size: 17px; font-family: 'Nunito', sans-serif; transition: all 0.4s ease; 
+            background: #fafafa;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            outline: none; border-color: var(--primary-blue); background: var(--white); 
+            box-shadow: 0 10px 30px rgba(33, 150, 243, 0.2); transform: translateY(-3px);
+        }
+        .form-group textarea { resize: vertical; min-height: 140px; }
+        
+        .submit-btn { 
+            width: 100%; padding: 22px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: var(--white); border: none; border-radius: 20px; font-size: 22px; 
+            font-weight: 900; cursor: pointer; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            font-family: 'Fredoka One', cursive; text-transform: uppercase; letter-spacing: 3px;
+            position: relative; overflow: hidden;
+        }
+        .submit-btn::before { 
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; 
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); 
+            transition: left 0.6s ease;
+        }
+        .submit-btn:hover::before { left: 100%; }
+        .submit-btn:hover { 
+            transform: scale(1.03) translateY(-5px); 
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5);
+        }
+        
+        .form-success { 
+            display: none; text-align: center; padding: 30px; 
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border-radius: 25px; margin-top: 25px;
+        }
+        .form-success.show { display: block; animation: successPop 0.6s ease; }
+        @keyframes successPop { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        .form-success i { font-size: 70px; color: var(--white); margin-bottom: 15px; }
+        .form-success h3 { color: var(--white); font-family: 'Fredoka One', cursive; font-size: 32px; }
+        .form-success p { color: rgba(255,255,255,0.9); font-size: 18px; margin-top: 10px; }
+
+        /* Gallery Section */
+        #gallery { 
+            background: linear-gradient(135deg, #fff9c4 0%, #ffecb3 100%); 
+            border-radius: 50px; margin: 50px auto;
+        }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        
+        .gallery-item { 
+            height: 250px; border-radius: 30px; overflow: hidden; position: relative; cursor: pointer; 
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .gallery-item:hover { 
+            transform: scale(1.08) rotate(3deg); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.25);
+        }
+        .gallery-item:nth-child(1) { background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%); }
+        .gallery-item:nth-child(2) { background: linear-gradient(135deg, var(--primary-yellow) 0%, #FFB300 100%); }
+        .gallery-item:nth-child(3) { background: linear-gradient(135deg, var(--primary-red) 0%, #AD1457 100%); }
+        .gallery-item:nth-child(4) { background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); }
+        .gallery-item:nth-child(5) { background: linear-gradient(135deg, #9C27B0 0%, #6A1B9A 100%); }
+        .gallery-item:nth-child(6) { background: linear-gradient(135deg, #FF9800 0%, #E65100 100%); }
+        
+        .gallery-item i { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            font-size: 80px; color: var(--white); opacity: 0.9; transition: all 0.4s ease;
+        }
+        .gallery-item:hover i { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+        
+        .gallery-item span { 
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            color: var(--white); font-weight: 800; font-size: 16px; 
+            background: rgba(0,0,0,0.4); padding: 12px 20px; border-radius: 25px; 
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* Video Section */
+        #video { 
+            background: var(--white); border-radius: 50px; margin: 50px auto; 
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+        }
+        .video-container { text-align: center; }
+        .video-wrapper { 
+            position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; 
+            border-radius: 30px; box-shadow: 0 30px 80px rgba(0,0,0,0.25); max-width: 1000px; margin: 0 auto;
+        }
+        .video-wrapper video, .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* Notice Board */
+        #notice { 
+            background: var(--white); border-radius: 50px; margin: 50px auto; 
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+        }
+        .notice-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
+        
+        .notice-card { 
+            background: linear-gradient(135deg, #fff9c4 0%, #ffecb3 100%); border-radius: 25px; 
+            padding: 30px; position: relative; border-left: 6px solid var(--primary-yellow);
+            transition: all 0.4s ease;
+        }
+        .notice-card:hover { transform: translateX(15px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        .notice-card:nth-child(2) { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left-color: var(--primary-blue); }
+        .notice-card:nth-child(3) { background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); border-left-color: var(--primary-red); }
+        .notice-card:nth-child(4) { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-left-color: #4CAF50; }
+        
+        .notice-card .date { 
+            background: var(--white); padding: 10px 18px; border-radius: 25px; font-size: 13px; 
+            font-weight: 800; color: var(--secondary-blue); display: inline-block; margin-bottom: 18px;
+        }
+        .notice-card h4 { font-size: 20px; color: var(--dark-text); margin-bottom: 12px; font-family: 'Fredoka One', cursive; }
+        .notice-card p { color: var(--light-text); font-size: 15px; line-height: 1.7; }
+        
+        .notice-card .new-tag { 
+            position: absolute; top: 18px; right: 18px; background: var(--primary-red); 
+            color: var(--white); padding: 8px 15px; border-radius: 20px; font-size: 12px; 
+            font-weight: 800; animation: pulse 1.5s ease-in-out infinite; text-transform: uppercase;
+        }
+
+        /* Contact Section */
+        #contact { 
+            background: linear-gradient(135deg, #e3f2fd 0%, #fff8e1 50%, #fce4ec 100%); 
+            border-radius: 50px; margin: 50px auto;
+        }
+        .contact-content { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        
+        .contact-info { 
+            background: var(--white); border-radius: 35px; padding: 50px; 
+            box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+        }
+        .contact-info h3 { 
+            font-family: 'Fredoka One', cursive; font-size: 32px; color: var(--secondary-blue); 
+            margin-bottom: 35px;
+        }
+        
+        .contact-item { display: flex; align-items: center; gap: 25px; margin-bottom: 30px; transition: all 0.3s ease; }
+        .contact-item:hover { transform: translateX(15px); }
+        
+        .contact-item .icon { 
+            width: 65px; height: 65px; border-radius: 20px; display: flex; 
+            align-items: center; justify-content: center; font-size: 26px; transition: all 0.3s ease;
+        }
+        .contact-item:hover .icon { transform: scale(1.15) rotate(10deg); }
+        .contact-item:nth-child(1) .icon { background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%); color: var(--white); }
+        .contact-item:nth-child(2) .icon { background: linear-gradient(135deg, var(--primary-yellow) 0%, #FFB300 100%); color: var(--dark-text); }
+        .contact-item:nth-child(3) .icon { background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%); color: var(--white); }
+        .contact-item:nth-child(4) .icon { background: linear-gradient(135deg, var(--primary-red) 0%, #AD1457 100%); color: var(--white); }
+        
+        .contact-item .text h4 { font-size: 18px; color: var(--dark-text); margin-bottom: 6px; }
+        .contact-item .text p { color: var(--light-text); font-size: 15px; }
+        
+        .map-container { 
+            border-radius: 35px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.15); 
+            height: 100%; min-height: 450px;
+        }
+        .map-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* Footer */
+        footer { 
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); 
+            color: var(--white); padding: 70px 30px 30px; margin-top: 50px;
+        }
+        .footer-content { 
+            max-width: 1400px; margin: 0 auto; display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 50px; margin-bottom: 40px;
+        }
+        
+        .footer-section h3 { 
+            font-family: 'Fredoka One', cursive; font-size: 28px; margin-bottom: 25px; 
+            color: var(--primary-yellow);
+        }
+        .footer-section p { line-height: 2; opacity: 0.9; font-size: 16px; }
+        .footer-section ul { list-style: none; }
+        .footer-section ul li { margin-bottom: 15px; display: flex; align-items: center; gap: 12px; }
+        .footer-section ul li i { color: var(--primary-yellow); font-size: 18px; }
+        .footer-section ul li a { 
+            color: var(--white); text-decoration: none; transition: all 0.3s ease; 
+            font-size: 16px;
+        }
+        .footer-section ul li a:hover { color: var(--primary-yellow); transform: translateX(8px); }
+        
+        .social-links { display: flex; gap: 18px; margin-top: 25px; }
+        .social-links a { 
+            width: 55px; height: 55px; background: rgba(255,255,255,0.1); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; color: var(--white); 
+            font-size: 24px; transition: all 0.4s ease;
+        }
+        .social-links a:hover { 
+            background: var(--primary-yellow); color: var(--secondary-blue); 
+            transform: translateY(-8px) rotate(360deg);
+        }
+        
+        .footer-bottom { 
+            text-align: center; padding-top: 35px; 
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .footer-bottom p { opacity: 0.8; font-size: 15px; }
+        .footer-bottom .stars { color: var(--primary-yellow); font-size: 22px; margin-top: 12px; letter-spacing: 5px; }
+
+        /* Scroll to Top */
+        .scroll-indicator { 
+            position: fixed; bottom: 35px; right: 35px; width: 60px; height: 60px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; cursor: pointer; 
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5); transition: all 0.4s ease; 
+            z-index: 999; opacity: 0; visibility: hidden;
+        }
+        .scroll-indicator.visible { opacity: 1; visibility: visible; }
+        .scroll-indicator:hover { 
+            transform: translateY(-8px) scale(1.1); 
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.7);
+        }
+        .scroll-indicator i { color: var(--white); font-size: 24px; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .about-content, .contact-content, .uniform-section { grid-template-columns: 1fr; }
+            .map-container { min-height: 350px; }
+        }
+        @media (max-width: 768px) {
+            .header-container { flex-direction: column; gap: 20px; }
+            nav { display: none; width: 100%; flex-direction: column; text-align: center; }
+            nav.active { display: flex; }
+            .menu-toggle { display: block; }
+            .logo-text h1 { font-size: 24px; }
+            .hero-banner h2 { font-size: 32px; }
+            .home-content h1 { font-size: 36px; }
+            .section-title h2 { font-size: 36px; }
+            .stats-bar { gap: 30px; }
+            .stat-item .number { font-size: 36px; }
+            .about-image .school-icon { width: 250px; height: 250px; }
+            .about-image .school-icon i { font-size: 100px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Advanced Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-logo"><i class="fas fa-graduation-cap"></i></div>
+            <div class="loader-text">PMS Little Star Public School</div>
+            <div class="loader-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <div class="floating-stars" id="floatingStars"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-img">
+                    <img src="images/boy-pic.png" alt="School Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-graduation-cap\'></i>';">
+                </div>
+                <div class="logo-text">
+                    <h1>PMS Little Star Public School</h1>
+                    <p>English Medium • CBSE Pattern • Play Group to Class 5</p>
+                </div>
+            </div>
+            <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+            <nav id="mainNav">
+                <a href="#home" class="active"><i class="fas fa-home"></i> Home</a>
+                <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+                <a href="#classes"><i class="fas fa-book"></i> Classes</a>
+                <a href="#admission"><i class="fas fa-user-plus"></i> Admission</a>
+                <a href="#gallery"><i class="fas fa-images"></i> Gallery</a>
+                <a href="#video"><i class="fas fa-video"></i> Video</a>
+                <a href="#notice"><i class="fas fa-bullhorn"></i> Notice</a>
+                <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <div class="hero-content">
+            <h2>🎉 Admissions Open for 2025-26! 🎉</h2>
+            <p>Give Your Child the Gift of Quality Education</p>
+            <div class="hero-buttons">
+                <a href="#admission" class="cta-btn">Apply Now <i class="fas fa-arrow-right"></i></a>
+                <a href="#about" class="cta-btn cta-btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stat-item"><div class="number" data-count="500">0</div><div class="label">Students</div></div>
+        <div class="stat-item"><div class="number" data-count="25">0</div><div class="label">Expert Teachers</div></div>
+        <div class="stat-item"><div class="number" data-count="15">0</div><div class="label">Years Experience</div></div>
+        <div class="stat-item"><div class="number" data-count="100">0</div><div class="label">% Results</div></div>
+    </div>
+
+    <!-- Home Section -->
+    <section id="home">
+        <div class="home-content">
+            <h1>Welcome to Little Star Public School</h1>
+            <p>Nurturing young minds with love, care, and quality education. We believe in creating a bright future for every child through innovative teaching methods and a supportive learning environment.</p>
+            <div class="features-grid">
+                <div class="feature-card"><i class="fas fa-chalkboard-teacher"></i><h3>Smart Classes</h3><p>Modern digital learning with interactive smart boards and advanced technology</p></div>
+                <div class="feature-card"><i class="fas fa-graduation-cap"></i><h3>Expert Teachers</h3><p>Highly qualified and experienced faculty members dedicated to excellence</p></div>
+                <div class="feature-card"><i class="fas fa-heart"></i><h3>Safe Environment</h3><p>24x7 CCTV monitoring and complete safety for your child</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about">
+        <div class="section-title"><h2>About Us</h2><p>Discover excellence in education and nurturing young minds for a brighter future</p></div>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Building Brighter Futures</h3>
+                <p>Little Star Public School is a prestigious educational institution committed to excellence in education. We provide a nurturing environment where children can learn, grow, and discover their potential.</p>
+                <p>Located in the heart of Buxar, Bihar, we offer comprehensive education from Play Group to Class 5 following the CBSE pattern with modern teaching methodologies.</p>
+                <div class="about-highlights">
+                    <span class="highlight-tag"><i class="fas fa-star"></i> CBSE Pattern</span>
+                    <span class="highlight-tag"><i class="fas fa-star"></i> English Medium</span>
+                    <span class="highlight-tag"><i class="fas fa-star"></i> Play Group to 5</span>
+                </div>
+            </div>
+            <div class="about-image">
+                <div class="school-photo-container"><img src="school-photo.jpeg" alt="Little Star Public School" class="school-photo" onerror="this.parentElement.style.display='none';"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Classes Section -->
+    <section id="classes">
+        <div class="section-title"><h2>Our Classes</h2><p>Quality education from Play Group to Class 5 with age-appropriate curriculum</p></div>
+        <div class="classes-grid">
+            <div class="class-card"><div class="class-card-header"><i class="fas fa-baby"></i><h3>Play Group</h3></div><div class="class-card-body"><div class="fee"><span>₹500</span><small>/month</small></div><ul class="class-features"><li><i class="fas fa-check-circle"></i> Age: 2-3 years</li><li><i class="fas fa-check-circle"></i> Basic concepts</li><li><i class="fas fa-check-circle"></i> Play activities</li><li><i class="fas fa-check-circle"></i> Motor skills</li></ul></div></div>
+            <div class="class-card"><div class="class-card-header"><i class="fas fa-child"></i><h3>Nursery</h3></div><div class="class-card-body"><div class="fee"><span>₹500</span><small>/month</small></div><ul class="class-features"><li><i class="fas fa-check-circle"></i> Age: 3-4 years</li><li><i class="fas fa-check-circle"></i> Foundation learning</li><li><i class="fas fa-check-circle"></i> Creative activities</li><li><i class="fas fa-check-circle"></i> Social skills</li></ul></div></div>
+            <div class="class-card"><div class="class-card-header"><i class="fas fa-shapes"></i><h3>LKG</h3></div><div class="class-card-body"><div class="fee"><span>₹600</span><small>/month</small></div><ul class="class-features"><li><i class="fas fa-check-circle"></i> Age: 4-5 years</li><li><i class="fas fa-check-circle"></i> Basic academics</li><li><i class="fas fa-check-circle"></i> Writing skills</li><li><i class="fas fa-check-circle"></i> Reading basics</li></ul></div></div>
+            <div class="class-card"><div class="class-card-header"><i class="fas fa-shapes"></i><h3>UKG</h3></div><div class="class-card-body"><div class="fee"><span>₹600</span><small>/month</small></div><ul class="class-features"><li><i class="fas fa-check-circle"></i> Age: 5-6 years</li><li><i class="fas fa-check-circle"></i> Advanced concepts</li><li><i class="fas fa-check-circle"></i> Number work</li><li><i class="fas fa-check-circle"></i> School prep</li></ul></div></div>
+            <div class="class-card"><div class="class-card-header"><i class="fas fa-user-graduate"></i><h3>Class 1-2</h3></div><div class="class-card-body"><div class="fee"><span>₹700</span><small>/month</small></div><ul class="class-features"><li><i class="fas fa-check-circle"></i> Age: 6-8 years</li><li><i class="fas fa-check-circle"></i> CBSE Curriculum</li><li><i class="fas fa-check-circle"></i> Basic subjects</li><li><i class="fas fa-check-circle"></i> Activity based</li></ul></div></div>
+            <div class="class-card"><div class="class-card-header"><i class="fas fa-book-reader"></i><h3>Class 3-5</h3></div><div class="class-card-body"><div class="fee"><span>₹800-900</span><small>/month</small></div><ul class="class-features"><li><i class="fas fa-check-circle"></i> Age: 8-11 years</li><li><i class="fas fa-check-circle"></i> Full CBSE</li><li><i class="fas fa-check-circle"></i> Science & Math</li><li><i class="fas fa-check-circle"></i> Computer Lab</li></ul></div></div>
+        </div>
+        <div class="fee-table"><h3>📚 Fee Structure</h3><table><thead><tr><th>Class</th><th>Monthly Fee</th><th>Annual Fee</th></tr></thead><tbody><tr><td>Play Group & Nursery</td><td>₹500</td><td>₹5,500</td></tr><tr><td>LKG & UKG</td><td>₹600</td><td>₹6,600</td></tr><tr><td>Class 1-2</td><td>₹700</td><td>₹7,700</td></tr><tr><td>Class 3-4</td><td>₹800</td><td>₹8,800</td></tr><tr><td>Class 5</td><td>₹900</td><td>₹9,900</td></tr></tbody></table></div>
+        <div class="section-title" style="margin-top: 70px;"><h2>School Uniform</h2></div>
+        <div class="uniform-section">
+            <div class="uniform-card"><div class="uniform-icon"><i class="fas fa-user"></i></div><h4>Regular Uniform</h4><p><strong>Check shirt</strong> with <strong>maroon pinafore</strong> (for girls)<br><strong>Check shirt</strong> with <strong>maroon pant</strong> (for boys)</p></div>
+            <div class="uniform-card"><div class="uniform-icon"><i class="fas fa-running"></i></div><h4>Sports Uniform</h4><p><strong>Red & White T-shirt</strong> with <strong>white track pant</strong></p></div>
+        </div>
+    </section>
+
+    <!-- Admission Form Section -->
+    <section id="admission">
+        <div class="section-title"><h2>Admission Form</h2><p>Take the first step towards your child's bright future</p></div>
+        <div class="admission-form">
+            <form id="admissionForm">
+                <div class="form-group"><label><i class="fas fa-user"></i> Parent's Name</label><input type="text" name="parentName" placeholder="Enter parent's full name" required aria-label="Parent's Name"></div>
+                <div class="form-group"><label><i class="fas fa-phone"></i> Phone Number</label><input type="tel" name="phone" placeholder="Enter phone number" required aria-label="Phone Number"></div>
+                <div class="form-group"><label><i class="fas fa-envelope"></i> Email Address</label><input type="email" name="email" placeholder="Enter email address" aria-label="Email Address"></div>
+                <div class="form-group"><label><i class="fas fa-child"></i> Child's Name</label><input type="text" name="childName" placeholder="Enter child's full name" required aria-label="Child's Name"></div>
+                <div class="form-group"><label><i class="fas fa-graduation-cap"></i> Class to Join</label>
+                    <select name="classJoin" required aria-label="Class to Join">
+                        <option value="">Select Class</option>
+                        <option value="Play Group">Play Group</option>
+                        <option value="Nursery">Nursery</option>
+                        <option value="LKG">LKG</option>
+                        <option value="UKG">UKG</option>
+                        <option value="Class 1">Class 1</option>
+                        <option value="Class 2">Class 2</option>
+                        <option value="Class 3">Class 3</option>
+                        <option value="Class 4">Class 4</option>
+                        <option value="Class 5">Class 5</option>
+                    </select>
+                </div>
+                <div class="form-group"><label><i class="fas fa-comment"></i> Message (Optional)</label><textarea name="message" placeholder="Any additional information..." aria-label="Message"></textarea></div>
+                <button type="submit" class="submit-btn">Submit Application <i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Success Message -->
+    <div class="form-success" id="formSuccess">
+        <i class="fas fa-check-circle"></i>
+        <h3>Application Submitted! 🎉</h3>
+        <p>Thank you for applying! We will contact you soon.</p>
+    </div>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <div class="section-title"><h2>Our Gallery</h2><p>Capturing memories of learning, fun, and growth</p></div>
+        <div class="gallery-grid">
+            <div class="gallery-item"><i class="fas fa-book"></i><span>Library</span></div>
+            <div class="gallery-item"><i class="fas fa-flask"></i><span>Science Lab</span></div>
+            <div class="gallery-item"><i class="fas fa-desktop"></i><span>Computer Lab</span></div>
+            <div class="gallery-item"><i class="fas fa-futbol"></i><span>Sports</span></div>
+            <div class="gallery-item"><i class="fas fa-music"></i><span>Music</span></div>
+            <div class="gallery-item"><i class="fas fa-palette"></i><span>Art & Craft</span></div>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section id="video">
+        <div class="section-title"><h2>Watch Our School</h2><p>Get a glimpse of our vibrant learning environment</p></div>
+        <div class="video-container">
+            <div class="video-wrapper">
+                <video controls style="width: 100%; border-radius: 30px;" poster="">
+                    <source src="videos/school-video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- Notice Board -->
+    <section id="notice">
+        <div class="section-title"><h2>Notice Board</h2><p>Stay updated with latest announcements</p></div>
+        <div class="notice-grid">
+            <div class="notice-card">
+                <span class="date">Jan 15, 2025</span>
+                <span class="new-tag">New</span>
+                <h4>Admission Open for 2025-26</h4>
+                <p>Admissions are now open for the academic year 2025-26. Apply now!</p>
+            </div>
+            <div class="notice-card">
+                <span class="date">Jan 10, 2025</span>
+                <h4>School Timing</h4>
+                <p>School timing: 8:00 AM to 2:00 PM (Monday to Saturday)</p>
+            </div>
+            <div class="notice-card">
+                <span class="date">Jan 05, 2025</span>
+                <h4>Parent-Teacher Meeting</h4>
+                <p>PTM scheduled for 2nd Saturday of every month.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="section-title"><h2>Contact Us</h2><p>We'd love to hear from you</p></div>
+        <div class="contact-content">
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <div class="contact-item">
+                    <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="text">
+                        <h4>Address</h4>
+                        <p>PMS Little Star Public School, Dubhuki to Khewli Road, Near Dubhuki Chowk, Buxar, Bihar 802101, India</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="icon"><i class="fas fa-phone"></i></div>
+                    <div class="text">
+                        <h4>Phone</h4>
+                        <p>+91 9113759087</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="icon"><i class="fas fa-envelope"></i></div>
+                    <div class="text">
+                        <h4>Email</h4>
+                        <p>pavankr95049@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28883.2345678912!2d83.9745!3d25.2428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398d014a7c9c0c1d%3A0x1c2c3e4f5g6h7i8j!2sBuxar%2C%20Bihar!5e0!3m2!1sen!2sin!4v1600000000000!5m2!1sen!2sin" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0; min-height: 450px;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Little Star Public School</h3>
+                <p>Nurturing young minds with love, care, and quality education.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="#about"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="#classes"><i class="fas fa-chevron-right"></i> Classes</a></li>
+                    <li><a href="#admission"><i class="fas fa-chevron-right"></i> Admission</a></li>
+                    <li><a href="#contact"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> Buxar, Bihar</li>
+                    <li><i class="fas fa-phone"></i> +91 9113759087</li>
+                    <li><i class="fas fa-envelope"></i> pavankr95049@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Little Star Public School. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top -->
+    <div class="scroll-indicator" id="scrollIndicator">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js?v=2"></script>
+</body>
+</html>
