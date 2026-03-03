@@ -1,105 +1,43 @@
-# 🌟 PMS – Little Star Public School
+# Array Flatten
 
-A Web-Based School Management System developed for managing primary school operations digitally.
+[![NPM version][npm-image]][npm-url]
+[![NPM downloads][downloads-image]][downloads-url]
+[![Build status][travis-image]][travis-url]
+[![Test coverage][coveralls-image]][coveralls-url]
 
-This project is designed for Nursery to Class 5 level school administration to simplify admission and student management processes.
+> Flatten an array of nested arrays into a single flat array. Accepts an optional depth.
 
----
+## Installation
 
-## 📌 Project Overview
+```
+npm install array-flatten --save
+```
 
-PMS (Public Management System) – Little Star Public School is a dynamic website that helps manage:
+## Usage
 
-- Online Admissions
-- Student Records
-- Notices & Announcements
-- School Information
-- Parent Communication
+```javascript
+var flatten = require('array-flatten')
 
-The system provides a digital platform for parents and school administration.
+flatten([1, [2, [3, [4, [5], 6], 7], 8], 9])
+//=> [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
----
+flatten([1, [2, [3, [4, [5], 6], 7], 8], 9], 2)
+//=> [1, 2, 3, [4, [5], 6], 7, 8, 9]
 
-## 🎯 Objectives
+(function () {
+  flatten(arguments) //=> [1, 2, 3]
+})(1, [2, 3])
+```
 
-- Digitize school admission process
-- Store student records securely
-- Provide online school information
-- Improve communication between school and parents
+## License
 
----
+MIT
 
-## 🏫 Features
-
-- ✅ Online Admission Form
-- ✅ Student Data Storage (Database)
-- ✅ Admin Panel
-- ✅ Notice Board Section
-- ✅ Gallery Section
-- ✅ Contact Page with Google Map
-- ✅ Responsive Website Design
-- ✅ WhatsApp Direct Admission Button
-
----
-
-## 🛠 Tech Stack
-
-**Frontend:**
-- HTML
-- CSS
-- JavaScript
-
-**Backend:**
-- PHP
-
-**Database:**
-- MySQL
-
-**Tools Used:**
-- XAMPP (Local Server)
-- VS Code
-
----
-
-## 💾 Installation Guide
-
-1. Install XAMPP
-2. Start Apache & MySQL
-3. Copy project folder to `htdocs`
-4. Import database file into phpMyAdmin
-5. Open browser and run:
-   http://localhost/project-folder-name
-
----
-
-## 📊 Future Enhancements
-
-- 🔹 Student Login Panel
-- 🔹 Online Fee Payment System
-- 🔹 Attendance Management
-- 🔹 Result Management
-- 🔹 SMS / WhatsApp Notification Integration
-- 🔹 Role-Based Access Control
-
----
-
-## 📍 Developed For
-
-Little Star Public School  
-Nursery to Class 5  
-Buxar, Bihar  
-
----
-
-## 👨‍💻 Developer
-
-**Banti Kumar**  
-B.Tech CSE (AIML)  
-Kashi Institute of Technology, Varanasi  
-
----
-
-## 📜 License
-
-This project is developed for educational and demonstration purposes.
-
+[npm-image]: https://img.shields.io/npm/v/array-flatten.svg?style=flat
+[npm-url]: https://npmjs.org/package/array-flatten
+[downloads-image]: https://img.shields.io/npm/dm/array-flatten.svg?style=flat
+[downloads-url]: https://npmjs.org/package/array-flatten
+[travis-image]: https://img.shields.io/travis/blakeembrey/array-flatten.svg?style=flat
+[travis-url]: https://travis-ci.org/blakeembrey/array-flatten
+[coveralls-image]: https://img.shields.io/coveralls/blakeembrey/array-flatten.svg?style=flat
+[coveralls-url]: https://coveralls.io/r/blakeembrey/array-flatten?branch=master
